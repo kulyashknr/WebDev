@@ -1,0 +1,28 @@
+
+<div class="container">
+  <div >
+    <div >
+      <div *ngFor="let tl of task_lists">
+        <button type="button"  (click)="getTasks(tl)" style="margin: 10px;">{{tl.name}}</button>
+
+      </div>
+    </div>
+    <div >
+      <h1 *ngIf="cur_task_list">{{cur_task_list.name}} tasks</h1>
+      <div *ngFor="let t of tasks" style="margin: 10px;">
+        <button type="button" (click)="getTask(t)">{{t.name}}</button>
+        <div *ngIf="cur_task">
+          <div *ngIf="cur_task.id == t.id" class="card-body">
+            ID: {{cur_task.id}} <br>
+            Name: {{cur_task.name}} <br>
+            Created: {{cur_task.created_at}} <br>
+            Due: {{cur_task.due_on}} <br>
+            Status: {{cur_task.status}} <br>
+            Task: {{cur_task.task_list.name}} <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
