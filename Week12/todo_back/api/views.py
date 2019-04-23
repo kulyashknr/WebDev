@@ -45,8 +45,9 @@ def task_list_detail(request, pk):
 @csrf_exempt
 def task_list(request, pk):
     if request.method == 'GET':
-        task_list = Task.objects.all()
-        serializer = TaskModelSerializer(task_list, many=True)
+        task_list = TaskList.objects.get(id=pk)
+        tasks = task_list.task_set.all()
+        serializer = TaskModelSerializer(tasks, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
 
     elif request.method == 'POST':

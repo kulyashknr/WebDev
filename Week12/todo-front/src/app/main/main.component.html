@@ -1,28 +1,84 @@
-
 <div class="container">
-  <div >
-    <div >
-      <div *ngFor="let tl of task_lists">
-        <button type="button"  (click)="getTasks(tl)" style="margin: 10px;">{{tl.name}}</button>
-
+  <div class="row mt-5">
+    <div class="col-lg-4">
+      <button type="button" class="btn btn-primary m-2" (click)="changeMode('create_list')">Create Task List</button>
+      <h1>Task Lists</h1>
+      <div  style="width: 20rem;">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let tl of task_lists">
+            <h5 class="ml-2">{{tl.name}}</h5>
+            <button type="button" class="btn btn-primary m-2" (click)="getTasks(tl)">Show</button>
+            <button type="button" class="btn btn-primary m-2" (click)="getTaskList(tl)">Update</button>
+            <button type="button" class="btn btn-primary m-2" (click)="deleteTaskList(tl.id)">Delete</button>
+          </li>
+        </ul>
       </div>
     </div>
-    <div >
-      <h1 *ngIf="cur_task_list">{{cur_task_list.name}} tasks</h1>
-      <div *ngFor="let t of tasks" style="margin: 10px;">
-        <button type="button" (click)="getTask(t)">{{t.name}}</button>
-        <div *ngIf="cur_task">
-          <div *ngIf="cur_task.id == t.id" class="card-body">
-            ID: {{cur_task.id}} <br>
-            Name: {{cur_task.name}} <br>
-            Created: {{cur_task.created_at}} <br>
-            Due: {{cur_task.due_on}} <br>
-            Status: {{cur_task.status}} <br>
-            Task: {{cur_task.task_list.name}} <br>
+    <div class="col-lg-4">
+      <ng-container *ngIf="mode=='tasks' || mode=='create_task' || mode=='update_task' || mode=='task'">
+        <h1 *ngIf="cur_task_list">Tasks of {{cur_task_list.name}}</h1>
+        <button type="button" class="btn btn-primary m-2" (click)="changeMode('create_task')" style="margin-bottom: 5px;">Create Task</button>
+        <div *ngFor="let t of tasks" class="card w-70">
+          <button type="button" class="btn btn-primary m-2" (click)="getTask(t)">{{t.name}}</button>
+          <div *ngIf="cur_task">
+            <div *ngIf="cur_task.id == t.id" class="card-body">
+              ID: {{cur_task.id}} <br>
+              Name: {{cur_task.name}} <br>
+              Created date: {{cur_task.created_at}} <br>
+              Due date: {{cur_task.due_on}} <br>
+              Status: {{cur_task.status}} <br>
+
+              <button type="button" class="btn btn-primary m-2" (click)="changeMode('update_task')">Update</button>
+              <button type="button" class="btn btn-primary m-2" (click)="deleteTask(t.id)">Delete</button>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+      <ng-container *ngIf="mode=='create_list'">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="task_list_name">
+        </div>
+        <button type="submit" class="btn btn-primary mt-2" (click)="createTaskList()">Create</button>
+      </ng-container>
+      <ng-container *ngIf="mode=='update_list'">
+        <h5>Update List {{cur_task_list.name}}</h5>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="Enter name" value="{{cur_task_list.name}}" [(ngModel)]="task_list_name">
+          <button type="submit" class="btn btn-primary mt-2" (click)="updateTaskList()">Update</button>
+        </div>
+      </ng-container>
+    </div>
+    <div class="col-lg-4">
+      <ng-container *ngIf="mode=='create_task'">
+        <h5>Create new task </h5>
+        <div class="form-group m-2">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="name" [(ngModel)]="task_name">
+          <label>Creation date</label>
+          <input type="text" class="form-control" placeholder="creation date" [(ngModel)]="task_created_at">
+          <label>Due on</label>
+          <input type="text" class="form-control" placeholder="due on" [(ngModel)]="task_due_on">
+          <label>Status</label>
+          <input type="text" class="form-control" placeholder="status" [(ngModel)]="task_status">
+          <button type="submit" class="btn btn-primary mt-2" (click)="createTask(cur_task_list)">Create</button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="mode=='update_task'">
+        <h5>Update existing task</h5>
+        <div class="form-group m-2">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="name" [(ngModel)]="cur_task.name">
+          <label>Creation date </label>
+          <input type="text" class="form-control" placeholder="creation date" [(ngModel)]="cur_task.created_at">
+          <label>Due on </label>
+          <input type="text" class="form-control" placeholder="due on" [(ngModel)]="cur_task.due_on">
+          <label>Status</label>
+          <input type="text" class="form-control" placeholder="status" [(ngModel)]="cur_task.status">
+          <button type="submit" class="btn btn-primary mt-2" (click)="updateTask(cur_task)">Update</button>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
-
