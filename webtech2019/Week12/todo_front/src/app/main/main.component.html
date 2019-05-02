@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-lg-4">
+      <button type="button" class="btn btn-primary m-2" (click)="changeMode('create_list')">Create Task List</button>
+      <h1>Lists</h1>
+      <div class="card" style="width: 20rem;">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let tl of task_lists">
+            <h5 class="ml-2">{{tl.name}}</h5>
+            <button type="button" class="btn btn-info m-2" (click)="getTasks(tl)">More</button>
+            <button type="button" class="btn btn-warning m-2" (click)="getTaskList(tl)">Update</button>
+            <button type="button" class="btn btn-danger m-2" (click)="deleteTaskList(tl.id)">Delete</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <ng-container *ngIf="mode=='tasks' || mode=='create_task' || mode=='update_task' || mode=='task'">
+        <h1 *ngIf="current_task_list">Tasks of {{current_task_list.name}}</h1>
+        <button type="button" class="btn btn-primary m-2" (click)="changeMode('create_task')">Create Task</button>
+        <div *ngFor="let t of tasks" class="card w-75">
+          <button type="button" class="btn btn-success m-2" (click)="getTask(t)">{{t.name}}</button>
+          <div *ngIf="current_task">
+            <div *ngIf="current_task.id == t.id" class="card-body">
+              ID: {{current_task.id}} <br>
+              Name: {{current_task.name}} <br>
+              Created date: {{current_task.created_at}} <br>
+              Due date: {{current_task.due_on}} <br>
+              Status: {{current_task.status}} <br>
+              Task: {{current_task.task_list.name}} <br>
+              <button type="button" class="btn btn-warning m-2" (click)="changeMode('update_task')">Update</button>
+              <button type="button" class="btn btn-danger m-2" (click)="deleteTask(t.id)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="mode=='create_list'">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="task_list_name">
+        </div>
+        <button type="submit" class="btn btn-primary mt-2" (click)="createTaskList()">Create</button>
+      </ng-container>
+      <ng-container *ngIf="mode=='update_list'">
+        <h5>Update List {{current_task_list.name}}</h5>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="Enter name" value="{{current_task_list.name}}" [(ngModel)]="task_list_name">
+          <button type="submit" class="btn btn-primary mt-2" (click)="updateTaskList()">Update</button>
+        </div>
+      </ng-container>
+    </div>
+    <div class="col-lg-4">
+      <ng-container *ngIf="mode=='create_task'">
+        <h5>Create new task in {{current_task_list.name}}</h5>
+        <div class="form-group m-2">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="task_name">
+          <label>Creation date (default = 0000-00-00T00:00:0Z)</label>
+          <input type="text" class="form-control" placeholder="Enter creation date" [(ngModel)]="task_created_at">
+          <label>Due on (default = 0000-00-00T00:00:0Z)</label>
+          <input type="text" class="form-control" placeholder="Enter due on" [(ngModel)]="task_due_on">
+          <label>Status</label>
+          <input type="text" class="form-control" placeholder="Enter status" [(ngModel)]="task_status">
+          <button type="submit" class="btn btn-primary mt-2" (click)="createTask(current_task_list)">Create</button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="mode=='update_task'">
+        <h5>Update Task: {{current_task.name}}</h5>
+        <div class="form-group m-2">
+          <label>Name</label>
+          <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="current_task.name">
+          <label>Creation date (default = 0000-00-00T00:00:0Z)</label>
+          <input type="text" class="form-control" placeholder="Enter creation date" [(ngModel)]="current_task.created_at">
+          <label>Due on (default = 0000-00-00T00:00:0Z)</label>
+          <input type="text" class="form-control" placeholder="Enter due on" [(ngModel)]="current_task.due_on">
+          <label>Status</label>
+          <input type="text" class="form-control" placeholder="Enter status" [(ngModel)]="current_task.status">
+          <button type="submit" class="btn btn-primary mt-2" (click)="updateTask(current_task)">Update</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+

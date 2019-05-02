@@ -1,0 +1,123 @@
+<ng-container *ngIf="logged_in">
+    <h1>Welcome {{username}}</h1>
+    <div class="row">
+        <button type="button" class="btn btn-primary m-2" (click)="logout()">Log out</button>
+    </div>
+</ng-container>
+<div class="container">
+  <ng-container *ngIf="logged_in">
+    <div class="row mt-5">
+      <div class="col-lg-4">
+        <button type="button" class="btn btn-primary m-2" (click)="changeMode('create_list')">Create Task List</button>
+        <h1>Lists</h1>
+        <div  style="width: 20rem;">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let tl of task_lists">
+              <h5 class="ml-2">{{tl.name}}</h5>
+              <button type="button" class="btn-primary m-2" (click)="getTasks(tl)">Tasks</button>
+              <button type="button" class="btn-primary m-2" (click)="getTaskList(tl)">Update</button>
+              <button type="button" class="btn-primary m-2" (click)="deleteTaskList(tl.id)">Delete</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <ng-container *ngIf="mode=='tasks' || mode=='create_task' || mode=='update_task' || mode=='task'">
+          <h1 *ngIf="cur_task_list">Tasks of {{cur_task_list.name}}</h1>
+          <button type="button" class="btn btn-primary m-2" (click)="changeMode('create_task')">Create Task</button>
+          <div *ngFor="let t of tasks" class="card w-75">
+            <button type="button" class="btn-primary m-2" (click)="getTask(t)">{{t.name}}</button>
+            <div *ngIf="cur_task">
+              <div *ngIf="cur_task.id == t.id" class="card-body">
+                ID: {{cur_task.id}} <br>
+                Name: {{cur_task.name}} <br>
+                Created date: {{cur_task.created_at}} <br>
+                Due date: {{cur_task.due_on}} <br>
+                Status: {{cur_task.status}} <br>
+                Task: {{cur_task.task_list.name}} <br>
+                <button type="button" class="btn-primary m-2" (click)="changeMode('update_task')">Update</button>
+                <button type="button" class="btn-primary m-2" (click)="deleteTask(t.id)">Delete</button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="mode=='create_list'">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="task_list_name">
+          </div>
+          <button type="submit" class="btn btn-primary mt-2" (click)="createTaskList()">Create</button>
+        </ng-container>
+        <ng-container *ngIf="mode=='update_list'">
+          <h5>Update List {{cur_task_list.name}}</h5>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" placeholder="Enter name" value="{{cur_task_list.name}}" [(ngModel)]="task_list_name">
+            <button type="submit" class="btn btn-primary mt-2" (click)="updateTaskList()">Update</button>
+          </div>
+        </ng-container>
+      </div>
+      <div class="col-lg-4">
+        <ng-container *ngIf="mode=='create_task'">
+          <h5>new task in {{cur_task_list.name}}</h5>
+          <div class="form-group m-2">
+            <label>Name</label>
+            <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="task_name">
+            <label>Creation date (default = 0000-00-00T00:00:0Z)</label>
+            <input type="text" class="form-control" placeholder="Enter creation date" [(ngModel)]="task_created_at">
+            <label>Due on (default = 0000-00-00T00:00:0Z)</label>
+            <input type="text" class="form-control" placeholder="Enter due on" [(ngModel)]="task_due_on">
+            <label>Status</label>
+            <input type="text" class="form-control" placeholder="Enter status" [(ngModel)]="task_status">
+            <button type="submit" class="btn btn-primary mt-2" (click)="createTask(cur_task_list)">Create</button>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="mode=='update_task'">
+          <h5>Update Task: {{cur_task.name}}</h5>
+          <div class="form-group m-2">
+            <label>Name</label>
+            <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="cur_task.name">
+            <label>Creation date</label>
+            <input type="text" class="form-control" placeholder="Enter creation date" [(ngModel)]="cur_task.created_at">
+            <label>Due on</label>
+            <input type="text" class="form-control" placeholder="Enter due on" [(ngModel)]="cur_task.due_on">
+            <label>Status</label>
+            <input type="text" class="form-control" placeholder="Enter status" [(ngModel)]="cur_task.status">
+            <button type="submit" class="btn btn-primary mt-2" (click)="updateTask(cur_task)">Update</button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!logged_in && !registration">
+    <div class="mt-5">
+      <div class="form-group">
+        <input type="text" class="form-control w-25" placeholder="Enter username" [(ngModel)]="username">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control w-25" placeholder="Password" [(ngModel)]="password">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2" (click)="login()">Login</button>
+      <button type="button" class="btn-primary m-2" (click)="registration=true">Registration</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!logged_in && registration">
+    <div class="mt-5">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-control w-25" placeholder="username" [(ngModel)]="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control w-25" placeholder="Password" [(ngModel)]="password">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="password" class="form-control w-25" placeholder="Email" [(ngModel)]="email">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2" (click)="register()">Register</button>
+      <br>
+      <button type="button" class="btn-primary m-2" (click)="registration=false">login</button>
+    </div>
+  </ng-container>
+</div>

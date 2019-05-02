@@ -1,0 +1,31 @@
+<nav class="navbar navbar-dark bg-dark">
+  <span class="navbar-brand mb-0 h1">TODO</span>
+</nav>
+
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-lg-6">
+      <h1>Lists</h1>
+      <div *ngFor="let tl of task_lists">
+        <button type="button" class="btn btn-primary m-2" (click)="getTasks(tl)">{{tl.name}}</button>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h1 *ngIf="current_task_list">Tasks of {{current_task_list.name}}</h1>
+      <div *ngFor="let t of tasks" class="card w-75">
+        <button type="button" class="btn btn-success m-2" (click)="getTask(t)">{{t.name}}</button>
+        <div *ngIf="current_task">
+          <div *ngIf="current_task.id == t.id" class="card-body">
+            ID: {{current_task.id}} <br>
+            Name: {{current_task.name}} <br>
+            Created date: {{current_task.created_at}} <br>
+            Due date: {{current_task.due_on}} <br>
+            Status: {{current_task.status}} <br>
+            Task: {{current_task.task_list.name}} <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
